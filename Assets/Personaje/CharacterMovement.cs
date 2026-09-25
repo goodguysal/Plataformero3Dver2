@@ -8,6 +8,7 @@ public class Playermovement : MonoBehaviour
 
     private Rigidbody rb;
     private bool puedeSaltar;
+    private MovingPlatform plataformaActual;
 
     // Checkpoint actual
     private Vector3 posicionCheckpoint;
@@ -69,8 +70,30 @@ public class Playermovement : MonoBehaviour
         {
             Morir();
         }
-    }
 
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+        {
+            plataformaActual = collision.gameObject.GetComponent<MovingPlatform>();
+
+            if (plataformaActual != null)
+            {
+                rb.MovePosition(rb.position + plataformaActual.MovimientoActual);
+            }
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+        {
+            if (plataformaActual == collision.gameObject.GetComponent<MovingPlatform>())
+            {
+                plataformaActual = null;
+            }
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         // Si toca un checkpoint
