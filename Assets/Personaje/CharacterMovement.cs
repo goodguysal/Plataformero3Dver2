@@ -9,9 +9,15 @@ public class Playermovement : MonoBehaviour
     private Rigidbody rb;
     private bool puedeSaltar;
 
+    // Checkpoint actual
+    private Vector3 posicionCheckpoint;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        // El primer checkpoint es la posición inicial del Player
+        posicionCheckpoint = transform.position;
     }
 
     void Update()
@@ -55,6 +61,35 @@ public class Playermovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        // Poder saltar al tocar el suelo
         puedeSaltar = true;
+
+        // Si toca un piso mortal
+        if (collision.gameObject.CompareTag("Piso"))
+        {
+            Morir();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // Si toca un checkpoint
+        if (other.CompareTag("Checkpoint"))
+        {
+            posicionCheckpoint = other.transform.position;
+
+            Debug.Log("Checkpoint actualizado");
+        }
+    }
+
+    private void Morir()
+    {
+        Debug.Log("Player murió");
+
+        // Detener el movimiento
+        rb.linearVelocity = Vector3.zero;
+
+        // Volver al último checkpoint
+        transform.position = posicionCheckpoint;
     }
 }
