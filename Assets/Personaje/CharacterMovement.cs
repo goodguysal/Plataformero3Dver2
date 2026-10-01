@@ -18,9 +18,8 @@ public class Playermovement : MonoBehaviour
     // Checkpoint actual
     private Vector3 posicionCheckpoint;
 
-    // =========================
-    // DASH
-    // =========================
+    // Dash
+
 
     public float fuerzaDash = 15f;
     public float duracionDash = 0.25f;
@@ -32,6 +31,7 @@ public class Playermovement : MonoBehaviour
     // Texto "E"
     public TextMeshProUGUI textoDash;
 
+    //Inicio y cosas que deben activarse luego
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -62,9 +62,9 @@ public class Playermovement : MonoBehaviour
 
     void Update()
     {
-        // =========================
-        // SALTO
-        // =========================
+
+        // Salto
+        
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame && puedeSaltar)
         {
@@ -72,16 +72,10 @@ public class Playermovement : MonoBehaviour
             puedeSaltar = false;
         }
 
-        // =========================
-        // BUSCAR BOLA
-        // =========================
+        // Buscar bola/pescado
+
 
         BuscarBolaDash();
-
-        // =========================
-        // ACTIVAR DASH
-        // =========================
-
         if (Keyboard.current.eKey.wasPressedThisFrame && bolaObjetivo != null && !haciendoDash)
         {
             IniciarDash();
@@ -91,6 +85,7 @@ public class Playermovement : MonoBehaviour
     void FixedUpdate()
     {
         // Si estamos haciendo dash
+
         if (haciendoDash)
         {
             tiempoDash -= Time.fixedDeltaTime;
@@ -106,7 +101,8 @@ public class Playermovement : MonoBehaviour
         float horizontal = 0f;
         float vertical = 0f;
 
-        // WASD
+        // Movimiento
+
         if (Keyboard.current.aKey.isPressed)
             horizontal = -1f;
 
@@ -130,9 +126,7 @@ public class Playermovement : MonoBehaviour
         );
     }
 
-    // =====================================================
-    // BUSCAR LA BOLA MÁS CERCANA
-    // =====================================================
+
 
     private void BuscarBolaDash()
     {
@@ -171,9 +165,7 @@ public class Playermovement : MonoBehaviour
         }
     }
 
-    // =====================================================
-    // INICIAR DASH
-    // =====================================================
+   //Dash en relación a bola/pescado
 
     private void IniciarDash()
     {
@@ -184,22 +176,20 @@ public class Playermovement : MonoBehaviour
             bolaObjetivo.transform.position - transform.position
         ).normalized;
 
-        // Impulso hacia la bola
+        // Impulso
         rb.linearVelocity = direccion * fuerzaDash;
 
         haciendoDash = true;
         tiempoDash = duracionDash;
 
-        // Ocultar la E durante el dash
+        // Ocultar la E 
         if (textoDash != null)
         {
             textoDash.gameObject.SetActive(false);
         }
     }
 
-    // =====================================================
-    // COLISIONES
-    // =====================================================
+    //Colisiones
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -256,9 +246,7 @@ public class Playermovement : MonoBehaviour
         }
     }
 
-    // =====================================================
-    // MORIR
-    // =====================================================
+    //Morir
 
     private void Morir()
     {
