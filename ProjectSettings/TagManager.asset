@@ -9,6 +9,7 @@ TagManager:
   - MovingPlatform
   - MovingPlatformVertical
   - BolaDash
+  - PinchosFinal
   layers:
   - Default
   - TransparentFX

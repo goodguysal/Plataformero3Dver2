@@ -1,12 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using System.Collections;
 
 public class Playermovement : MonoBehaviour
 {
     public float velocidad = 5f;
     public float fuerzaSalto = 7f;
+    public GameObject pantallaFinal;
+    public GameObject textoGanaste;
 
+    private bool nivelTerminado = false;
     private Rigidbody rb;
     private bool puedeSaltar;
     private MovingPlatform plataformaActual;
@@ -32,14 +36,28 @@ public class Playermovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        // El primer checkpoint es la posición inicial del Player
+        
         posicionCheckpoint = transform.position;
 
-        // Ocultar la E al comenzar
+
         if (textoDash != null)
         {
             textoDash.gameObject.SetActive(false);
         }
+
+        if (textoGanaste != null)
+        {
+            textoGanaste.SetActive(false);
+        }
+        rb = GetComponent<Rigidbody>();
+
+        posicionCheckpoint = transform.position;
+
+        if (pantallaFinal != null)
+            pantallaFinal.SetActive(false);
+
+        if (textoGanaste != null)
+            textoGanaste.SetActive(false);
     }
 
     void Update()
@@ -192,7 +210,14 @@ public class Playermovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Piso"))
         {
             Morir();
-        } }
+        }
+
+        // Si toca los pinchos finales
+        if (collision.gameObject.CompareTag("PinchosFinal"))
+        {
+            Ganar();
+        }
+    }
     private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("MovingPlatform"))
@@ -241,5 +266,32 @@ public class Playermovement : MonoBehaviour
 
         rb.linearVelocity = Vector3.zero;
         transform.position = posicionCheckpoint;
+    }
+    private void Ganar()
+    {
+        if (nivelTerminado)
+            return;
+
+        nivelTerminado = true;
+
+        // Detener al jugador inmediatamente
+        rb.linearVelocity = Vector3.zero;
+
+        // Desactivar el movimiento
+        enabled = false;
+
+        // Esperar medio segundo y mostrar la pantalla final
+        StartCoroutine(MostrarVictoria());
+    }
+
+    private IEnumerator MostrarVictoria()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        if (pantallaFinal != null)
+            pantallaFinal.SetActive(true);
+
+        if (textoGanaste != null)
+            textoGanaste.SetActive(true);
     }
 }
